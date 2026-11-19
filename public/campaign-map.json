@@ -1,0 +1,68 @@
+{
+ "_note": "Demo campaign names (fictional).",
+ "campaigns": [
+  {
+   "match": "DEMO_LeadAds_B2B_Business_2026",
+   "name": "OLD | B2B | ליד אדס (מטא)",
+   "status": "ישן",
+   "audience": "עסקי",
+   "platform": "מטא"
+  },
+  {
+   "match": "DEMO_LeadAds_B2C_Spring_NEW",
+   "name": "NEW | B2C | ליד אדס (מטא)",
+   "status": "חדש",
+   "audience": "פרטי",
+   "platform": "מטא"
+  },
+  {
+   "match": "DEMO_LeadAds_B2C_Classic_OLD",
+   "name": "OLD | B2C | ליד אדס (מטא)",
+   "status": "ישן",
+   "audience": "פרטי",
+   "platform": "מטא"
+  },
+  {
+   "match": "DEMO_LP_B2C_Website_OLD",
+   "name": "OLD | B2C | המרות לאתר (מטא)",
+   "status": "ישן",
+   "audience": "פרטי",
+   "platform": "מטא"
+  },
+  {
+   "match": "DEMO_LP_B2C_Website_NEW",
+   "name": "NEW | B2C | המרות לאתר (מטא)",
+   "status": "חדש",
+   "audience": "פרטי",
+   "platform": "מטא"
+  },
+  {
+   "match": "DEMO_Google_Search_Generic",
+   "name": "גוגל חיפוש-גנרי",
+   "status": null,
+   "audience": null,
+   "platform": "גוגל"
+  },
+  {
+   "match": "DEMO_Google_PMax",
+   "name": "פימקס (גוגל)",
+   "status": null,
+   "audience": null,
+   "platform": "גוגל"
+  },
+  {
+   "match": "DEMO_YouTube_Unicorns",
+   "name": "NEW | יוטיוב",
+   "status": "חדש",
+   "audience": null,
+   "platform": "יוטיוב"
+  },
+  {
+   "match": "DEMO_WhatsApp_Bot",
+   "name": "וואטסאפ",
+   "status": null,
+   "audience": null,
+   "platform": "אחר"
+  }
+ ]
+}

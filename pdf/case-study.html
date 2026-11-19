@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>דוח לידים אוטומטי - איך זה נבנה</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 16mm 15mm 18mm; }
+  :root { --ink:#16201f; --ink2:#55605f; --g:#004040; --g2:#40b060; --bg:#f4f6f3; --line:#e2e6e1; --red:#c2362b; }
+  * { box-sizing: border-box; }
+  body { font-family: Heebo, Arial, sans-serif; color: var(--ink); font-size: 11.5pt; line-height: 1.65; margin: 0; }
+  h1 { font-size: 30pt; line-height: 1.15; margin: 0 0 10px; color: var(--g); font-weight: 800; }
+  h2 { font-size: 18pt; color: var(--g); margin: 0 0 6px; font-weight: 700; }
+  h3 { font-size: 13pt; margin: 18px 0 4px; font-weight: 700; }
+  p { margin: 6px 0 10px; }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  .kicker { font-size: 10pt; letter-spacing: .5px; color: var(--g2); font-weight: 700; margin-bottom: 4px; }
+  .lead { font-size: 13pt; color: var(--ink2); }
+  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: space-between; }
+  .cover-top { padding-top: 30mm; }
+  .cover .bar { height: 8px; width: 90px; background: var(--g2); border-radius: 4px; margin: 18px 0; }
+  .cover-img { width: 100%; border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+  .meta { display: flex; gap: 22px; font-size: 10pt; color: var(--ink2); }
+  .shot { width: 100%; border: 1px solid var(--line); border-radius: 10px; margin: 8px 0 4px; }
+  .cap { font-size: 9.5pt; color: var(--ink2); margin-bottom: 12px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .card { background: var(--bg); border-radius: 12px; padding: 12px 14px; }
+  .card b { color: var(--g); }
+  .num { font-size: 26pt; font-weight: 800; color: var(--g2); line-height: 1; }
+  ul { margin: 4px 0 10px; padding-right: 18px; } li { margin: 3px 0; }
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-items: stretch; margin: 14px 0; }
+  .box { border: 2px solid var(--g); border-radius: 12px; padding: 10px; text-align: center; background: #fff; font-size: 10pt; }
+  .box b { display: block; font-size: 11.5pt; color: var(--g); margin-bottom: 2px; }
+  .box.accent { border-color: var(--g2); background: #eef8ef; }
+  .arrow { text-align: center; color: var(--g2); font-weight: 800; }
+  .callout { border-right: 5px solid var(--g2); background: #eef8ef; padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 10px 0; }
+  .callout.warn { border-color: var(--red); background: #fcefed; }
+  table { width: 100%; border-collapse: collapse; font-size: 10.5pt; margin: 8px 0 12px; }
+  th, td { text-align: right; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--ink2); font-weight: 500; }
+  .two { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; align-items: start; }
+  .foot { font-size: 9pt; color: var(--ink2); }
+  code { font-family: Consolas, monospace; font-size: 9.5pt; background: var(--bg); padding: 1px 5px; border-radius: 4px; direction: ltr; unicode-bidi: embed; }
+</style>
+</head>
+<body>
+
+<!-- 1. cover -->
+<section class="page cover">
+  <div class="cover-top">
+    <div class="kicker">CASE STUDY · שיווק ודאטה</div>
+    <h1>דוח לידים אוטומטי<br>מה-CRM ועד עלות להצעת מחיר</h1>
+    <div class="bar"></div>
+    <p class="lead">איך בניתי, בלי צוות פיתוח, דוח חי שמחבר בין הלידים במערכת ה-CRM, ההוצאה בפרסום והמודעות עצמן, ומראה להנהלה, למנהל השיווק ולמשרד הפרסום את אותה תמונה, בזמן אמת.</p>
+  </div>
+  <img class="cover-img" src="shots/kpis.png" alt="">
+  <div class="meta"><span>הנתונים במסמך ובדוח הם נתוני הדגמה</span><span>דמו חי: leads-report-demo.pages.dev</span></div>
+</section>
+
+<!-- 2. the problem -->
+<section class="page">
+  <div class="kicker">נקודת הפתיחה</div>
+  <h2>הנתונים היו קיימים. התמונה לא.</h2>
+  <p>הלידים נכנסים ל-CRM ממקורות רבים: טפסי פייסבוק ואינסטגרם, דפי נחיתה, קטלוג באתר, גוגל, וואטסאפ וטלפון. צוות המכירות עובד מתצוגה אחת ב-CRM, ומסמן שם בין היתר אם נשלחה הצעת מחיר, שהיא מדד האיכות העיקרי שלנו.</p>
+  <p>אבל כדי לענות על שאלה פשוטה כמו "כמה עלתה לנו הצעת מחיר מכל קמפיין?" היה צריך:</p>
+  <ul>
+    <li>לייצא לידים מה-CRM ולסנן אותם ידנית כמו התצוגה של המכירות.</li>
+    <li>למשוך הוצאות ממנהל המודעות של מטא, במסך אחר ובפורמט אחר.</li>
+    <li>להצליב שמות קמפיינים ומודעות טכניים וארוכים, ולנחש איזו מודעה זו בכלל.</li>
+    <li>לחזור על הכול בכל פעם שמישהו שואל.</li>
+  </ul>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card"><b>הנהלה</b><br>רצתה תשובה של שורה אחת: כמה לידים, כמה הצעות מחיר, מה המגמה.</div>
+    <div class="card"><b>מנהל שיווק</b><br>רצה לדעת איזה קמפיין עובד, ישן מול חדש, ואיפה הכסף נשרף.</div>
+    <div class="card"><b>PPC ומשרד הפרסום</b><br>רצו לרדת לרמת Ad Set ומודעה, עם עלות אמיתית להצעת מחיר ולא רק לליד.</div>
+    <div class="card"><b>אני</b><br>רציתי מקור אמת אחד, שמתעדכן לבד ושאפשר לסמוך עליו.</div>
+  </div>
+  <div class="callout">המטרה: דוח אחד, חי, שהמספר בו זהה למספר שאנשי המכירות רואים ב-CRM, עם דריל דאון עד המודעה.</div>
+</section>
+
+<!-- 3. architecture -->
+<section class="page">
+  <div class="kicker">איך זה עובד</div>
+  <h2>ארכיטקטורה פשוטה, בלי שרתים לתחזק</h2>
+  <div class="flow">
+    <div class="box"><b>CRM</b>Dynamics 365<br>הלידים, הסטטוסים והצעות המחיר</div>
+    <div class="box accent"><b>n8n</b>אוטומציה ואינטגרציות<br>שולף, מסנן ומאחד</div>
+    <div class="box"><b>Meta Ads</b>הוצאה, תוצאות,<br>תמונות וסרטוני מודעות</div>
+    <div class="box accent"><b>Cloudflare</b>הדוח עצמו<br>עם שכבת אבטחה</div>
+  </div>
+  <table>
+    <tr><th style="width:24%">רכיב</th><th>מה הוא עושה</th></tr>
+    <tr><td><b>n8n: שכבת לידים</b></td><td>מריץ בדיוק את אותו פילטר של התצוגה שהמכירות עובדות ממנה ב-CRM, לפי טווח תאריכים בשעון ישראל. מחזיר רק את השדות שצריך, וטלפונים מוצפנים.</td></tr>
+    <tr><td><b>n8n: שכבת הוצאות</b></td><td>מושך ממטא הוצאה לכל מודעה בטווח, את מה שמטא עצמה מדווחת, וקישורים לתמונה או לסרטון של כל מודעה.</td></tr>
+    <tr><td><b>Cloudflare Pages</b></td><td>מארח את הדוח. פונקציות קטנות בצד השרת בודקות קוד כניסה, מחזיקות את המפתחות ומטמון של כמה דקות. המפתחות לא מגיעים לדפדפן אף פעם.</td></tr>
+    <tr><td><b>GitHub</b></td><td>שמירת הקוד והיסטוריית גרסאות. כל שינוי בדוח מתועד וניתן לשחזור.</td></tr>
+    <tr><td><b>מייל בוקר</b></td><td>תהליך נוסף ב-n8n ששולח כל בוקר את מספר הלידים של אתמול לרשימת תפוצה.</td></tr>
+  </table>
+  <div class="callout">הדוח לא "יודע" מה זה CRM או מטא. הוא מקבל נתונים מוכנים משכבת ה-n8n, ולכן אפשר להחליף מקור או להוסיף מקור (למשל גוגל) בלי לגעת בדוח.</div>
+</section>
+
+<!-- 4. building the data layer -->
+<section class="page">
+  <div class="kicker">הצעד הכי חשוב</div>
+  <h2>קודם כל: שהמספרים יתאימו ל-CRM</h2>
+  <p>דוח שהמספר בו שונה ממה שהמכירות רואות מאבד אמון ביום הראשון. לכן הצעד הראשון לא היה עיצוב, אלא שחזור מדויק של התצוגה ב-CRM.</p>
+  <h3>איך עשיתי את זה</h3>
+  <ul>
+    <li><b>שליפת הגדרת התצוגה עצמה:</b> במקום להעתיק פילטרים מצילומי מסך, שלפתי מה-CRM את הגדרת התצוגה המקורית (FetchXML) עם כל התנאים: בעלים, מקורות ליד, סטטוסים, יחידה עסקית.</li>
+    <li><b>שימוש באותו פילטר בדיוק:</b> שכבת הנתונים מריצה את ההגדרה הזו כמו שהיא, ומחליפה רק את טווח התאריכים.</li>
+    <li><b>אימות ליד מול ליד:</b> השוויתי יום שלם מול ייצוא של המשתמש. המספרים תאמו אחד לאחד.</li>
+    <li><b>שעון ישראל:</b> ה-CRM שומר זמנים ב-UTC. כל יום בדוח מחושב לפי שעון ישראל, כולל מעבר שעון חורף וקיץ.</li>
+  </ul>
+  <h3>שמות שבני אדם מבינים</h3>
+  <p>שמות קמפיינים בפרסום נראים כך: <code>KLG_XX_Conversions_Lead-ads_Leasing-B2B_GO05E09E07B03A</code>. טבלת מיפוי פשוטה (באקסל) מתרגמת אותם לשמות כמו "OLD | B2B | ליד אדס", ומוסיפה סיווג: ישן או חדש, פרטי או עסקי, פלטפורמה. שם שלא נמצא בטבלה מסומן בדוח כ"לא ממופה", כך ששום ליד לא נעלם.</p>
+  <div class="callout">עיקרון: הדוח מציג את מה שיש, גם כשזה לא נוח. לידים בלי קמפיין מוצגים כ"אורגני", ולידים שהוחרגו מוצגים בטבלה נפרדת בתחתית.</div>
+</section>
+
+<!-- 5. the report: exec summary + trend -->
+<section class="page">
+  <div class="kicker">הדוח · 1</div>
+  <h2>תקציר מנהלים ומגמה</h2>
+  <img class="shot" src="shots/kpis.png" alt="">
+  <div class="cap">תקציר מנהלים: לידים, הצעות מחיר, אחוז הצעה, הוצאה, עלות לליד ועלות להצעת מחיר. מתחת לכל מספר: השינוי מול תקופת ההשוואה, וההסבר מול מה משווים. מתחת: תובנות שנכתבות אוטומטית.</div>
+  <img class="shot" src="shots/trend.png" alt="">
+  <div class="cap">מגמה: לידים לפי יום (או לפי שעה כשבוחרים יום אחד), אחוז הצעות מחיר, וקו התקופה המושווית. "היום" מושווה לאתמול עד אותה שעה, כדי שההשוואה תהיה הוגנת.</div>
+</section>
+
+<!-- 6. campaigns + ads -->
+<section class="page">
+  <div class="kicker">הדוח · 2</div>
+  <h2>מקמפיין ועד מודעה</h2>
+  <img class="shot" src="shots/campaigns.png" alt="">
+  <div class="cap">טבלת קמפיינים עם דריל דאון: לחיצה על קמפיין פותחת Ad Sets, ולחיצה על Ad Set פותחת מודעות. לכל שורה: לידים, הצעות מחיר, הוצאה, עלות לליד, עלות להצעה ושינוי.</div>
+  <img class="shot" src="shots/ads.png" alt="">
+  <div class="cap">ביצועי מודעות: כל מודעה בשורה אחת, מכל הקמפיינים, עם תמונה קטנה. לחיצה פותחת את התמונה או מנגנת את הסרטון. כך גם מי שלא מכיר את שמות הקבצים מבין מיד על איזו מודעה מדובר.</div>
+</section>
+
+<!-- 7. old vs new + bottom -->
+<section class="page">
+  <div class="kicker">הדוח · 3</div>
+  <h2>ישן מול חדש, והמלצות</h2>
+  <img class="shot" src="shots/oldnew.png" alt="">
+  <div class="cap">השוואה בצבעים בין קמפיינים חדשים לישנים, עם עלות להצעת מחיר לכל קמפיין, קו ממוצע, המלצה אוטומטית (לחזק, להשאיר, להחליש) והשוואה בין מה שמטא מדווחת לבין מה שבאמת נכנס ל-CRM.</div>
+  <img class="shot" src="shots/bottom.png" alt="">
+  <div class="cap">בתחתית: לידים שהוחרגו מהדוח (לשקיפות), והתראה אדומה כשליד מקמפיין מטא מגיע בלי שם מודעה, כלומר כשמשהו בקליטה נשבר.</div>
+</section>
+
+<!-- 8. mobile + security -->
+<section class="page">
+  <div class="kicker">נגיש ובטוח</div>
+  <div class="two">
+    <div>
+      <h2>מותאם מובייל</h2>
+      <p>רוב הצפייה בדוח קורית מהטלפון. בגרסת המובייל הכרטיסים מתסדרים בשתי עמודות, שם הקמפיין נשאר קבוע בצד כשגוללים את המספרים, ושמות ארוכים מקוצרים עם שלוש נקודות ונפתחים בלחיצה.</p>
+      <h2 style="margin-top:22px">אבטחה במידה הנכונה</h2>
+      <ul>
+        <li><b>קוד כניסה</b> בכל כניסה, עם נעילה אחרי כמה ניסיונות שגויים.</li>
+        <li><b>החלפת קוד מנתקת את כולם</b> מיד.</li>
+        <li><b>מפתחות הגישה</b> ל-CRM ולמטא יושבים רק ב-n8n ובשרת, לא בדפדפן ולא בקוד.</li>
+        <li><b>בלי מידע אישי:</b> הדוח מציג ספירות בלבד. טלפונים מוצפנים עוד לפני שהם יוצאים מ-n8n.</li>
+        <li><b>לא מופיע בגוגל</b> ולא נשמר בדפדפן, כך שתמיד רואים את הגרסה העדכנית.</li>
+      </ul>
+    </div>
+    <div><img class="shot" src="shots/mobile.png" alt="" style="max-width:100%"><div class="cap">הדוח בטלפון</div></div>
+  </div>
+</section>
+
+<!-- 9. what it revealed -->
+<section class="page">
+  <div class="kicker">מה הדוח חשף</div>
+  <h2>ברגע שהנתונים יושבים יחד, הבעיות קופצות</h2>
+  <p>הערך הגדול לא היה רק בחיסכון בזמן. ברגע שהלידים, ההוצאה והמודעות הופיעו באותו מסך, התגלו בעיות שלא נראו קודם:</p>
+  <table>
+    <tr><th style="width:28%">ממצא</th><th>מה גילינו</th><th style="width:28%">מה עשינו</th></tr>
+    <tr><td><b>איוונטים שנספרים ביתר</b></td><td>אירוע "שליחת טופס" באתר נספר במטא כמה פעמים יותר ממספר הלידים האמיתי. קמפייני האתר למדו מנתון שגוי.</td><td>זיהוי, והמלצה לעבור ל-Conversions API.</td></tr>
+    <tr><td><b>כל ליד נוצר פעמיים</b></td><td>שתי אינטגרציות יצרו כל ליד מטופס פייסבוק, ולפעמים דווקא העותק בלי שם המודעה נשאר.</td><td>אימות שהאינטגרציה החדשה קולטת 100%, וכיבוי הכפולה.</td></tr>
+    <tr><td><b>שיוך שנדרס</b></td><td>כשאדם חוזר, תהליך הכפולים ב-CRM העתיק את המקור הישן על הליד החדש.</td><td>תיעוד והעברה לטיפול במערכת ה-CRM.</td></tr>
+    <tr><td><b>לידים לא רלוונטיים</b></td><td>מועמדים לעבודה מקמפיין גיוס נכנסו לתור של המכירות.</td><td>זיהוי וסינון.</td></tr>
+    <tr><td><b>פרמטרים שנאבדים</b></td><td>חלק מהלידים מהאתר הגיעו בלי שם קמפיין, כי ה-UTM לא נשמר במעבר בין עמודים.</td><td>המלצה לשמירת הפרמטרים בכניסה.</td></tr>
+  </table>
+  <div class="callout warn">השורה התחתונה: לפני הדוח, חלק מההחלטות על תקציב התקבלו לפי מספרים של מטא שלא תאמו את המציאות ב-CRM.</div>
+</section>
+
+<!-- 10. next step -->
+<section class="page">
+  <div class="kicker">הצעד הבא</div>
+  <h2>Conversions API: לתת לפרסום ללמוד מהמכירות</h2>
+  <p>היום הפרסום לומד מ"פינג" שמגיע מהדפדפן ברגע שמישהו לוחץ "שלח" בטופס. לא כל לחיצה היא ליד, וחלק מהסימנים נחסמים או נספרים פעמיים. ואחרי הלחיצה, למטא אין שום מידע על מה שקרה בפועל.</p>
+  <div class="flow" style="grid-template-columns: 1fr 1fr 1fr">
+    <div class="box"><b>ליד נכנס ל-CRM</b>רק לידים אמיתיים</div>
+    <div class="box accent"><b>n8n</b>כל 15 דקות, מידע מוצפן</div>
+    <div class="box"><b>מטא</b>"ליד" ו"הצעת מחיר נשלחה"</div>
+  </div>
+  <ul>
+    <li><b>ספירה מדויקת:</b> רק לידים שבאמת נכנסו למערכת.</li>
+    <li><b>למידה מאיכות:</b> מטא יודעת מי קיבל הצעת מחיר, ויכולה לחפש עוד אנשים כאלה.</li>
+    <li><b>סטנדרט מקובל:</b> זו ההמלצה הרשמית של מטא, וכך עובדים היום רוב המפרסמים.</li>
+    <li><b>שינוי זהיר:</b> שמות האירועים חדשים, כך ששום קמפיין קיים לא משתנה עד שמחליטים. מתחילים מקמפיין אחד, משווים, ורק אז מרחיבים.</li>
+  </ul>
+  <h3>מה עוד בתוכנית</h3>
+  <ul>
+    <li>חיבור הוצאות גוגל, כך שעלות לליד ולהצעה תהיה גם לגוגל.</li>
+    <li>תיקון שמירת פרמטרי הקמפיין באתר, כדי לצמצם לידים "אורגניים" שבעצם הגיעו מפרסום.</li>
+  </ul>
+</section>
+
+<!-- 11. tools & lessons -->
+<section class="page">
+  <div class="kicker">כלים ותובנות</div>
+  <h2>איך זה נבנה, ומה למדתי</h2>
+  <div class="grid2">
+    <div class="card"><b>Claude Code</b><br>שותף לבנייה: כתיבת הקוד, שליפת הגדרות מה-CRM, בניית התהליכים ב-n8n, בדיקות והעלאה לאוויר.</div>
+    <div class="card"><b>n8n</b><br>החיבורים: CRM, מטא, מייל יומי, ובהמשך Conversions API.</div>
+    <div class="card"><b>Cloudflare Pages</b><br>אירוח הדוח, פונקציות קטנות לאבטחה ולמטמון, בלי שרת לתחזק.</div>
+    <div class="card"><b>GitHub</b><br>שמירת הקוד, היסטוריית שינויים ואפשרות לחזור לכל גרסה.</div>
+  </div>
+  <h3>מה למדתי בדרך</h3>
+  <ul>
+    <li><b>להתחיל מהמקור:</b> להעתיק את הגדרת התצוגה מה-CRM עצמו חסך ויכוחים על "למה המספר שונה".</li>
+    <li><b>לאמת לפני שמעצבים:</b> מספר אחד שתואם ל-CRM שווה יותר מעשרה גרפים יפים.</li>
+    <li><b>להציג גם את מה שלא נוח:</b> לידים בלי מקור, פערים מול מטא, לידים שהוחרגו. השקיפות בונה אמון.</li>
+    <li><b>שינויים קטנים, מהר:</b> הדוח השתנה כמעט כל יום לפי הפידבק, וכל שינוי עלה לאוויר תוך דקה.</li>
+    <li><b>דוח טוב מוביל לשאלות טובות:</b> הממצא החשוב ביותר, האיוונטים, לא היה חלק מהתוכנית. הוא פשוט קפץ מהנתונים.</li>
+  </ul>
+  <p class="foot" style="margin-top:24px">הדוח במסמך זה מוצג עם נתוני הדגמה. דמו חי: <b>leads-report-demo.pages.dev</b></p>
+</section>
+
+</body>
+</html>

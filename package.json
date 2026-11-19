@@ -1,0 +1,7 @@
+{
+  "name": "leads-report-demo",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler pages deploy public --project-name leads-report-demo --branch main"
+  }
+}

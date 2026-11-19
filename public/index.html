@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Demo Leasing · דוח לידים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="lock" class="lock" hidden>
+  <form id="pinForm" class="lock-card" autocomplete="off">
+    <img class="logo lock-logo" src="logo.svg" alt="Demo Leasing">
+    <h1>דוח לידים</h1>
+    <p class="muted">הקלידו את קוד הכניסה</p>
+    <div class="pin">
+      <input id="pinIn" type="password" maxlength="32" aria-label="קוד" placeholder="••••" autocomplete="off" autocapitalize="off" spellcheck="false" dir="ltr">
+    </div>
+    <button type="submit" class="enter">כניסה</button>
+    <p id="pinMsg" class="pin-msg" role="alert"></p>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="title">
+      <img class="logo" src="logo.svg" alt="Demo Leasing">
+      <h1>דוח לידים</h1>
+    </div>
+    <div class="top-actions">
+      <span id="updated" class="muted small"></span>
+      <button id="refreshBtn" class="ghost" title="רענון">רענון</button>
+      <button id="logoutBtn" class="ghost" title="יציאה">יציאה</button>
+    </div>
+  </header>
+
+  <section class="controls">
+    <div class="chips" id="presets" role="group" aria-label="טווח זמן"></div>
+    <div id="custom" class="custom" hidden>
+      <label>מ- <input type="date" id="fromIn"></label>
+      <label>עד <input type="date" id="toIn"></label>
+    </div>
+    <label class="compare">השוואה ל
+      <select id="compareSel">
+        <option value="prev">תקופה קודמת</option>
+        <option value="yoy">אותה תקופה שנה שעברה</option>
+        <option value="none">ללא השוואה</option>
+      </select>
+    </label>
+  </section>
+  <section class="filters" id="filters"></section>
+  <p id="rangeLabel" class="range-label"></p>
+
+  <div id="loading" class="loading" hidden>טוען נתונים מה-CRM…</div>
+  <div id="error" class="error" hidden></div>
+
+  <main id="report">
+    <section class="block">
+      <h2>תקציר מנהלים</h2>
+      <p id="kpiNote" class="kpi-note"></p>
+      <div class="kpis" id="kpis"></div>
+      <ul class="insights" id="insights"></ul>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2>מגמה</h2><span class="muted small" id="trendNote"></span></div>
+      <div class="chart"><canvas id="trendChart"></canvas></div>
+    </section>
+
+
+    <section class="block">
+      <div class="block-head">
+        <h2>קמפיינים, Ad Sets ומודעות</h2>
+        <div class="seg" role="group" aria-label="שם קמפיין">
+          <button data-names="display" class="on">שם מוצג</button>
+          <button data-names="raw">שם מקורי</button>
+        </div>
+      </div>
+      <p class="muted small">לחיצה על קמפיין פותחת את ה-Ad Sets ואת המודעות. לחיצה על כותרת עמודה ממיינת. לחיצה על תמונה מגדילה אותה.</p>
+      <div class="table-wrap"><table class="tbl" id="campTable"></table></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <h2>ביצועי מודעות</h2>
+        <input id="adSearch" class="search" type="search" placeholder="חיפוש מודעה">
+      </div>
+      <p class="muted small">כל מודעה בשורה אחת, מכל הקמפיינים יחד. לחיצה על שם מציגה אותו במלואו, ולחיצה על תמונה מגדילה אותה.</p>
+      <div class="table-wrap"><table class="tbl" id="adTable"></table></div>
+      <button id="adMore" class="ghost more" hidden></button>
+    </section>
+
+    <section class="block" id="oldNewBlock">
+      <div class="block-head">
+        <h2>ישן מול חדש · קמפייני מטא</h2>
+        <span class="legend"><i class="dot old"></i>ישן <i class="dot new"></i>חדש</span>
+      </div>
+      <p class="muted small">לכל קמפיין: כמה עלתה כל הצעת מחיר בטווח שנבחר, והמלצה אם לחזק או להחליש. הפס מראה את העלות להצעה, וככל שהוא קצר יותר זה טוב יותר. "מטא · CRM" משווה בין מה שמטא מדווחת (טפסים או אירועי פיקסל) לבין הלידים שבאמת נכנסו ל-CRM. פער גדול מסומן באדום.</p>
+      <div id="onSummary" class="on-summary"></div>
+      <div id="onRows" class="on-rows"></div>
+      <ul id="onConclusions" class="insights"></ul>
+    </section>
+
+    <section class="block">
+      <h2>לידים שלא נכללים בדוח</h2>
+      <p class="muted small">הלידים האלה מופיעים בתצוגה ב-CRM, אבל לא נספרים בשום מספר בדוח: לא בתקציר, לא בטבלאות ולא בעלויות. הם מוצגים כאן רק לידיעה, לפי הטווח שנבחר.</p>
+      <div class="table-wrap"><table class="tbl" id="exTable"></table></div>
+    </section>
+
+    <section id="alert" class="alert" hidden></section>
+    <p id="organicNote" class="foot-note"></p>
+  </main>
+</div>
+
+<div id="lightbox" class="lightbox" hidden role="dialog" aria-label="תצוגה מקדימה של המודעה">
+  <figure>
+    <img id="lbImg" alt="">
+    <video id="lbVid" controls playsinline preload="metadata" hidden></video>
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+  <button class="lb-close" aria-label="סגירה">✕</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

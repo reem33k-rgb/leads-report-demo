@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="90" viewBox="0 0 300 90">
+<circle cx="45" cy="45" r="34" fill="none" stroke="#40b060" stroke-width="14"/><circle cx="45" cy="45" r="12" fill="#004040"/>
+<text x="95" y="42" font-family="Arial" font-size="32" font-weight="bold" fill="#004040">Demo</text>
+<text x="95" y="76" font-family="Arial" font-size="28" font-weight="bold" fill="#40b060">Leasing ›</text></svg>
